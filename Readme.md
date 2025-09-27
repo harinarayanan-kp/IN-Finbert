@@ -29,6 +29,55 @@ This project uses a BERT-based machine learning model trained on Indian news sam
 5. Evaluate model performance: `python model_valuation.py`
 6. The trained model will be saved as `model/indianFinbert.pt`
 
+## Results
+
+### Model Performance
+
+The trained BERT model shows strong performance on Indian financial news sentiment classification:
+
+#### Key Metrics
+
+- **Overall Accuracy**: 79%
+- **Training Epochs**: 4 epochs with progressive improvement
+- **Best Validation Accuracy**: 78.87%
+
+#### Classification Report
+
+```
+              precision    recall  f1-score   support
+
+    Negative       0.75      0.82      0.79       231
+     Neutral       0.76      0.75      0.76       402
+    Positive       0.83      0.81      0.82       427
+
+    accuracy                           0.79      1060
+   macro avg       0.78      0.79      0.79      1060
+weighted avg       0.79      0.79      0.79      1060
+```
+
+#### Training Progress
+
+- **Epoch 1**: Validation Accuracy 74.43%
+- **Epoch 2**: Validation Accuracy 77.08%
+- **Epoch 3**: Validation Accuracy 78.77%
+- **Epoch 4**: Validation Accuracy 78.87% (Best)
+
+#### Visual Results
+
+##### Confusion Matrix
+
+![Confusion Matrix](model_training/confusion_matrix.png)
+
+##### ROC Curve
+
+![ROC Curve](model_training/roc_curve.png)
+
+##### Precision-Recall Curve
+
+![Precision-Recall Curve](model_training/precision_recall_curve.png)
+
+For detailed training metrics and results, see `model_training/training_result.txt`.
+
 ### API Usage
 
 ```bash
