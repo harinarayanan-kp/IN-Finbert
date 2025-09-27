@@ -13,7 +13,6 @@ type SentimentData = {
   };
 };
 
-// Helper functions
 const getSentimentColor = (sentiment: string) => {
   switch (sentiment) {
     case "positive":
@@ -40,7 +39,6 @@ const getSentimentEmoji = (sentiment: string) => {
   }
 };
 
-// Compact Single-Line Infographic Component
 const CompactSentimentBar = ({ data }: { data: SentimentData }) => {
   const { label, score, all_scores } = data;
   const confidence = Math.round(score * 100);
@@ -60,7 +58,6 @@ const CompactSentimentBar = ({ data }: { data: SentimentData }) => {
         marginTop: "12px",
       }}
     >
-      {/* Emoji and Label */}
       <div
         style={{
           display: "flex",
@@ -82,7 +79,6 @@ const CompactSentimentBar = ({ data }: { data: SentimentData }) => {
         </span>
       </div>
 
-      {/* Mini Progress Bar */}
       <div
         style={{
           flex: 1,
@@ -116,7 +112,6 @@ const CompactSentimentBar = ({ data }: { data: SentimentData }) => {
         />
       </div>
 
-      {/* Scores */}
       <div
         style={{
           display: "flex",
@@ -139,7 +134,6 @@ const CompactSentimentBar = ({ data }: { data: SentimentData }) => {
   );
 };
 
-// Sentiment Visualization Component (keep for expanded view if needed)
 const SentimentVisualization = ({ data }: { data: SentimentData }) => {
   const { label, score, all_scores } = data;
   const confidence = Math.round(score * 100);
@@ -155,7 +149,6 @@ const SentimentVisualization = ({ data }: { data: SentimentData }) => {
         border: "1px solid #e2e8f0",
       }}
     >
-      {/* Main Result */}
       <div
         style={{
           textAlign: "center",
@@ -192,7 +185,6 @@ const SentimentVisualization = ({ data }: { data: SentimentData }) => {
         </div>
       </div>
 
-      {/* Score Breakdown */}
       <div style={{ marginBottom: "16px" }}>
         <h4
           style={{
@@ -265,7 +257,6 @@ const SentimentVisualization = ({ data }: { data: SentimentData }) => {
         })}
       </div>
 
-      {/* Market Interpretation */}
       <div
         style={{
           background: "#f8fafc",
@@ -371,7 +362,6 @@ export default function NewsTile({ newsItem }: { newsItem: NewsItem }) {
         )}
       </a>
 
-      {/* Show sentiment analysis result */}
       {loading ? (
         <div
           style={{

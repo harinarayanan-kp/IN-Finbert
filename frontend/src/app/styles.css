@@ -167,27 +167,6 @@
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
-/* Base styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
-  line-height: 1.6;
-  color: #1a202c;
-  font-weight: 400;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
 /* Animation for loading dots */
 @keyframes pulse {
   0%,
@@ -210,34 +189,6 @@ a {
   100% {
     transform: rotate(360deg);
   }
-}
-
-/* Elegant button styles */
-.load-more-btn {
-  background: linear-gradient(145deg, #1a202c, #2d3748);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  position: relative;
-  overflow: hidden;
-}
-
-.load-more-btn::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.1),
-    transparent
-  );
-  transition: left 0.6s ease;
-}
-
-.load-more-btn:hover::before {
-  left: 100%;
 }
 
 /* Enhanced focus states */

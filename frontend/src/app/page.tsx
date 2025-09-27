@@ -2,13 +2,9 @@ import { NewsItem } from "@/lib/types";
 import NewsDashboard from "./components/NewsDashboard";
 import ManualSentimentInput from "./components/ManualSentimentInput";
 
-// This function fetches data from our own API route.
 async function getNews(): Promise<NewsItem[] | null> {
   try {
-    // Use the full URL because this fetch happens on the server.
-    // In production, you'd replace this with your actual domain.
     const res = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/news`, {
-      // Revalidate data every 10 minutes
       next: { revalidate: 600 },
     });
 
@@ -25,7 +21,6 @@ async function getNews(): Promise<NewsItem[] | null> {
   }
 }
 
-// The page is an async component, allowing `await` at the top level.
 export default async function HomePage() {
   const newsItems = await getNews();
 

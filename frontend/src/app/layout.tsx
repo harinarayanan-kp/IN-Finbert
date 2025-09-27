@@ -30,7 +30,6 @@ export default function RootLayout({
         className={`font-variables ${geistSans.variable} ${geistMono.variable}`}
       >
         {children}
-        {/* <Chat /> */}
       </body>
     </html>
   );
