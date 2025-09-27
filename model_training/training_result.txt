@@ -1,0 +1,26 @@
+--- Epoch 1/4 ---
+Training Epoch 1: 100%|████████████████████████| 133/133 [04:00<00:00,  1.81s/it, loss=0.462] 
+Validating Epoch 1: 100%|████████████████████████████████████| 34/34 [00:45<00:00,  1.33s/it] 
+Average Training Loss: 0.8555 | Validation Accuracy: 0.7443
+New best model saved with accuracy: 0.7443
+
+--- Epoch 2/4 ---
+Training Epoch 2: 100%|████████████████████████| 133/133 [04:01<00:00,  1.82s/it, loss=0.402] 
+Validating Epoch 2: 100%|████████████████████████████████████| 34/34 [00:46<00:00,  1.36s/it] 
+Average Training Loss: 0.5411 | Validation Accuracy: 0.7708
+New best model saved with accuracy: 0.7708
+
+--- Epoch 3/4 ---
+Training Epoch 3: 100%|████████████████████████| 133/133 [04:01<00:00,  1.81s/it, loss=0.266] 
+Validating Epoch 3: 100%|████████████████████████████████████| 34/34 [00:45<00:00,  1.34s/it] 
+Average Training Loss: 0.3969 | Validation Accuracy: 0.7877
+New best model saved with accuracy: 0.7877
+
+--- Epoch 4/4 ---
+Training Epoch 4: 100%|████████████████████████| 133/133 [04:01<00:00,  1.82s/it, loss=0.503] 
+Validating Epoch 4: 100%|████████████████████████████████████| 34/34 [00:46<00:00,  1.36s/it] 
+Average Training Loss: 0.3061 | Validation Accuracy: 0.7887
+New best model saved with accuracy: 0.7887
+
+Training finished.
+Best validation accuracy achieved: 0.7887
