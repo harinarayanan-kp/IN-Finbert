@@ -78,6 +78,14 @@ weighted avg       0.79      0.79      0.79      1060
 
 For detailed training metrics and results, see `model_training/training_result.txt`.
 
+### Application Interface
+
+#### Frontend Screenshots
+
+![Application Interface - Sample 1](frontend/sample1.png)
+
+![Application Interface - Sample 2](frontend/sample2.png)
+
 ### API Usage
 
 ```bash
