@@ -1,7 +1,6 @@
 "use client";
 
 import { NewsItem } from "@/lib/types";
-import { useState, useEffect } from "react";
 
 type SentimentData = {
   label: string;
@@ -37,6 +36,92 @@ const getSentimentEmoji = (sentiment: string) => {
     default:
       return "🤔";
   }
+};
+
+const CompanyTags = ({ companies }: { companies: any[] }) => {
+  if (!companies || companies.length === 0) return null;
+
+  // Show max 3 companies to avoid overcrowding
+  const displayCompanies = companies.slice(0, 3);
+  const hasMore = companies.length > 3;
+
+  return (
+    <div style={{ marginTop: "12px", marginBottom: "8px" }}>
+      <div
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "6px",
+          alignItems: "center",
+        }}
+      >
+        <span
+          style={{
+            fontSize: "0.75rem",
+            color: "#64748b",
+            fontWeight: "500",
+            marginRight: "4px",
+          }}
+        >
+          📊 Companies:
+        </span>
+        {displayCompanies.map((company, index) => (
+          <div
+            key={company.nseScripCode || index}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+              padding: "4px 8px",
+              background: "linear-gradient(135deg, #667eea15, #764ba205)",
+              border: "1px solid #667eea30",
+              borderRadius: "4px",
+              fontSize: "0.75rem",
+              fontWeight: "500",
+            }}
+          >
+            {company.imageUrl && (
+              <img
+                src={company.imageUrl}
+                alt={company.companyShortName}
+                style={{ width: "16px", height: "16px", borderRadius: "2px" }}
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = "none";
+                }}
+              />
+            )}
+            <span style={{ color: "#374151" }}>
+              {company.companyShortName || company.companyName}
+            </span>
+            {company.livePriceDto && (
+              <span
+                style={{
+                  color:
+                    company.livePriceDto.dayChange >= 0 ? "#10b981" : "#ef4444",
+                  fontSize: "0.7rem",
+                  fontWeight: "600",
+                }}
+              >
+                {company.livePriceDto.dayChange >= 0 ? "↗" : "↘"}
+                {company.livePriceDto.dayChangePerc?.toFixed(1)}%
+              </span>
+            )}
+          </div>
+        ))}
+        {hasMore && (
+          <span
+            style={{
+              fontSize: "0.7rem",
+              color: "#9ca3af",
+              fontStyle: "italic",
+            }}
+          >
+            +{companies.length - 3} more
+          </span>
+        )}
+      </div>
+    </div>
+  );
 };
 
 const CompactSentimentBar = ({ data }: { data: SentimentData }) => {
@@ -295,41 +380,7 @@ const SentimentVisualization = ({ data }: { data: SentimentData }) => {
 };
 
 export default function NewsTile({ newsItem }: { newsItem: NewsItem }) {
-  const [sentimentData, setSentimentData] = useState<SentimentData | null>(
-    newsItem.sentiment || null
-  );
-  const [loading, setLoading] = useState(false);
-
-  // Auto-analyze sentiment on component mount if not already available
-  useEffect(() => {
-    if (!sentimentData && !loading) {
-      analyzeSentiment();
-    }
-  }, [newsItem]);
-
-  const analyzeSentiment = async () => {
-    setLoading(true);
-
-    try {
-      // Combine title and description for analysis
-      const textToAnalyze = newsItem.description
-        ? `${newsItem.title}. ${newsItem.description}`
-        : newsItem.title;
-
-      const response = await fetch("http://127.0.0.1:8000/analyze", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text: textToAnalyze }),
-      });
-
-      const data = await response.json();
-      setSentimentData(data);
-    } catch (error) {
-      console.error("Error analyzing sentiment:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const sentimentData = newsItem.sentiment || null;
 
   // Get tile background color based on sentiment
   const getTileStyle = () => {
@@ -357,12 +408,17 @@ export default function NewsTile({ newsItem }: { newsItem: NewsItem }) {
         <h3 className="news-title">{newsItem.title}</h3>
         <p className="news-timestamp">{newsItem.timestamp}</p>
 
+        {/* Show company tags for Groww news */}
+        {newsItem.companies && <CompanyTags companies={newsItem.companies} />}
+
         {newsItem.description && (
           <p className="news-description">{newsItem.description}</p>
         )}
       </a>
 
-      {loading ? (
+      {sentimentData ? (
+        <CompactSentimentBar data={sentimentData} />
+      ) : (
         <div
           style={{
             padding: "12px",
@@ -371,52 +427,13 @@ export default function NewsTile({ newsItem }: { newsItem: NewsItem }) {
             borderRadius: "8px",
             border: "1px solid #e2e8f0",
             marginTop: "12px",
+            color: "#64748b",
+            fontSize: "14px",
           }}
         >
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: "8px",
-              color: "#64748b",
-            }}
-          >
-            <div
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#667eea",
-                animation: "pulse 1.5s ease-in-out infinite",
-              }}
-            />
-            <div
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#667eea",
-                animation: "pulse 1.5s ease-in-out infinite 0.2s",
-              }}
-            />
-            <div
-              style={{
-                width: "6px",
-                height: "6px",
-                borderRadius: "50%",
-                background: "#667eea",
-                animation: "pulse 1.5s ease-in-out infinite 0.4s",
-              }}
-            />
-            <span style={{ marginLeft: "8px", fontSize: "14px" }}>
-              Analyzing sentiment...
-            </span>
-          </div>
+          ⏳ Sentiment analysis pending...
         </div>
-      ) : sentimentData ? (
-        <CompactSentimentBar data={sentimentData} />
-      ) : null}
+      )}
     </div>
   );
 }

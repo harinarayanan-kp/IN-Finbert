@@ -2,51 +2,23 @@
 
 import { NewsItem } from "@/lib/types";
 import NewsTile from "./NewsTile";
-import { useState } from "react";
 
 export default function NewsDashboard({
-  newsItems: initialNewsItems,
+  newsItems,
+  loading = false,
+  newsSource = "economic-times",
+  hasMore = true,
+  loadingMore = false,
+  onLoadMore,
 }: {
   newsItems: NewsItem[];
+  loading?: boolean;
+  newsSource?: "economic-times" | "groww";
+  hasMore?: boolean;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
 }) {
-  const [newsItems, setNewsItems] = useState<NewsItem[]>(initialNewsItems);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-
-  const loadMoreNews = async () => {
-    if (loading || !hasMore) return;
-
-    setLoading(true);
-    const nextPage = currentPage + 1;
-
-    try {
-      const response = await fetch(`/api/news?page=${nextPage}`);
-      const data = await response.json();
-
-      if (response.ok && data.news && data.news.length > 0) {
-        // Filter out duplicates based on URL
-        const newItems = data.news.filter(
-          (newItem: NewsItem) =>
-            !newsItems.some((existingItem) => existingItem.url === newItem.url)
-        );
-
-        if (newItems.length > 0) {
-          setNewsItems((prevItems) => [...prevItems, ...newItems]);
-          setCurrentPage(nextPage);
-        } else {
-          // No new unique items, likely reached the end
-          setHasMore(false);
-        }
-      } else {
-        setHasMore(false);
-      }
-    } catch (error) {
-      console.error("Error loading more news:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // No internal state needed - everything is managed by parent component
 
   return (
     <div>
@@ -66,11 +38,11 @@ export default function NewsDashboard({
           }}
         >
           <button
-            onClick={loadMoreNews}
-            disabled={loading}
+            onClick={onLoadMore}
+            disabled={loadingMore}
             style={{
               padding: "14px 40px",
-              background: loading
+              background: loadingMore
                 ? "linear-gradient(145deg, #9ca3af, #6b7280)"
                 : "linear-gradient(145deg, #1a202c, #2d3748)",
               color: "white",
@@ -78,7 +50,7 @@ export default function NewsDashboard({
               borderRadius: "6px",
               fontSize: "15px",
               fontWeight: "500",
-              cursor: loading ? "not-allowed" : "pointer",
+              cursor: loadingMore ? "not-allowed" : "pointer",
               transition: "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)",
               boxShadow:
                 "0 2px 8px rgba(0, 0, 0, 0.15), 0 1px 3px rgba(0, 0, 0, 0.1)",
@@ -93,7 +65,7 @@ export default function NewsDashboard({
               overflow: "hidden",
             }}
             onMouseOver={(e) => {
-              if (!loading) {
+              if (!loadingMore) {
                 e.currentTarget.style.background =
                   "linear-gradient(145deg, #2d3748, #4a5568)";
                 e.currentTarget.style.transform = "translateY(-1px)";
@@ -102,7 +74,7 @@ export default function NewsDashboard({
               }
             }}
             onMouseOut={(e) => {
-              if (!loading) {
+              if (!loadingMore) {
                 e.currentTarget.style.background =
                   "linear-gradient(145deg, #1a202c, #2d3748)";
                 e.currentTarget.style.transform = "translateY(0)";
@@ -111,7 +83,7 @@ export default function NewsDashboard({
               }
             }}
           >
-            {loading ? (
+            {loadingMore ? (
               <>
                 <div
                   style={{
@@ -135,7 +107,7 @@ export default function NewsDashboard({
         </div>
       )}
 
-      {!hasMore && newsItems.length > initialNewsItems.length && (
+      {!hasMore && newsItems.length > 0 && (
         <div
           style={{
             textAlign: "center",
