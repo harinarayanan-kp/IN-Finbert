@@ -33,20 +33,11 @@ Thumbs.db
 *.log
 logs/
 
-# Runtime data
-pids
-*.pid
-*.seed
-*.pid.lock
-
-# Coverage directory used by tools like istanbul
+# Coverage directory
 coverage/
 
 # ESLint cache
 .eslintcache
-
-# Prettier cache
-.prettierache
 
 # Git
 .git/
@@ -56,8 +47,8 @@ coverage/
 README.md
 *.md
 
-# Docker files (don't copy into container)
-Dockerfile
+# Docker files
+Dockerfile*
 .dockerignore
 
 # Test files
