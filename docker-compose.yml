@@ -1,5 +1,26 @@
 services:
-  # Backend service (FastAPI)
+  # Model training service (Runs once to generate .pt file)
+  model-training:
+    build:
+      context: ./model_training
+      dockerfile: Dockerfile
+    container_name: sentiment-model-training
+    volumes:
+      # Mount shared volume to output trained model
+      - model_data:/app/model
+      # Mount training data
+      - ./model_training/data:/app/data:ro
+    environment:
+      - PYTHONUNBUFFERED=1
+      - PYTHONDONTWRITEBYTECODE=1
+    networks:
+      - sentiment-network
+    # This service runs once and exits
+    restart: "no"
+    profiles:
+      - training
+
+  # Backend service (FastAPI) 
   backend:
     build:
       context: ./backend
@@ -11,8 +32,8 @@ services:
       - PYTHONUNBUFFERED=1
       - PYTHONDONTWRITEBYTECODE=1
     volumes:
-      # Optional: Mount model directory for easy updates
-      - ./backend/model:/app/model:ro
+      # Mount shared volume to access trained model
+      - model_data:/app/model:ro
     networks:
       - sentiment-network
     restart: unless-stopped
@@ -55,5 +76,7 @@ networks:
 
 # Optional: Add volumes for data persistence
 volumes:
+  model_data:
+    name: sentiment-model-data
   backend_data:
     name: sentiment-backend-data

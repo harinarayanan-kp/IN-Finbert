@@ -135,7 +135,8 @@ if __name__ == '__main__':
 
         if accuracy > best_accuracy:
             best_accuracy = accuracy
-            torch.save(model.state_dict(), "model/indianFinbert.pt")
+            # Save to mounted volume directory
+            torch.save(model.state_dict(), "/app/model/indianFinbert.pt")
             print(f"New best model saved with accuracy: {best_accuracy:.4f}")
 
     print("\nTraining finished.")

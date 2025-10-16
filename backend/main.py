@@ -1,3 +1,4 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -10,7 +11,14 @@ logging.basicConfig(level=logging.INFO)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 logging.info(f"Using device: {device}")
 
+
 try:
+    model_path = "model/indianFinbert.pt"
+
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(
+            f"Model file not found at {model_path}. Please train the model first using 'docker-compose --profile training up model-training'")
+
     logging.info("Loading custom BERT model...")
 
     tokenizer = AutoTokenizer.from_pretrained("bert-base-uncased")
@@ -18,8 +26,7 @@ try:
     model = AutoModelForSequenceClassification.from_pretrained(
         "bert-base-uncased", num_labels=3)
 
-    model.load_state_dict(torch.load(
-        "model/indianFinbert.pt", map_location=device))
+    model.load_state_dict(torch.load(model_path, map_location=device))
 
     model = model.to(device)
     model.eval()
@@ -46,13 +53,27 @@ class SentimentRequest(BaseModel):
     text: str
 
 
+@app.get("/health")
+def health_check():
+    """Health check endpoint"""
+    model_status = "loaded" if model is not None and tokenizer is not None else "not_loaded"
+    return {
+        "status": "healthy",
+        "model_status": model_status,
+        "device": str(device)
+    }
+
+
 @app.post("/analyze")
 def analyze_sentiment(request: SentimentRequest):
     """
     Accepts text and returns sentiment analysis from the custom trained BERT model.
     """
     if model is None or tokenizer is None:
-        return {"error": "Model is not available"}
+        return {
+            "error": "Model is not available. Please train the model first using 'docker-compose --profile training up model-training'",
+            "model_status": "not_loaded"
+        }
 
     logging.info(f"Analyzing text: {request.text[:50]}...")
 

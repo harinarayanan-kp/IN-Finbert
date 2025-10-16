@@ -17,8 +17,8 @@ COPY requirements.txt .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the model directory
-COPY model/ ./model/
+# Create model directory (will be mounted as volume)
+RUN mkdir -p model
 
 # Copy the main application
 COPY main.py .
